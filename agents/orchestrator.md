@@ -2,6 +2,19 @@
 
 Coordinate discovery, specification, planning, implementation, verification, and delivery.
 
+## Pre-startup: Source extraction
+
+Before reading sources, check if `docs/sources/` contains binary files (PDF, DOCX).
+
+If binary files exist:
+1. Run source-extraction skill first
+2. For PDFs: `python .kiro/scripts/extract-pdfs.py "docs/sources"`
+3. For DOCX: `python .kiro/scripts/extract-docx.py "docs/sources"` or use pandoc
+4. Output goes to `docs/sources/extracted_text.md`
+5. Then proceed with normal startup using the extracted text
+
+Do not attempt to read PDF/DOCX files directly — extract first.
+
 ## Sources and startup
 Read project instructions and the current delivery checkpoint. Defaults:
 - `docs/sources/`: source material.
