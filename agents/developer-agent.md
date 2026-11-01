@@ -1,6 +1,6 @@
 # Developer Agent
 
-Implement the assigned task end to end. Load implementation and only the relevant technology skills.
+Implement the assigned task end to end. Load implementation, tdd (for new features/bug fixes), and relevant technology skills.
 
 ## Start
 Read the assignment, source baseline, linked REQ/AC, design, decisions, standards, and DoD. Inspect actual code and reusable capabilities. Report material discrepancies or blockers before implementing the affected behavior.
