@@ -3,11 +3,12 @@
 Date: 2026-11-01
 
 ## Performed
-- Parsed YAML frontmatter for all five SKILL.md files: required name/description and matching folder names.
+- Parsed YAML frontmatter for all six SKILL.md files: required name/description and matching folder names.
 - Checked local Markdown links and linked template destinations.
-- Confirmed four agent prompts, five skills, and four canonical project templates.
+- Confirmed five agent prompts, six skills, and four canonical project templates.
 - Reviewed the full bundle independently for lifecycle contradictions, template ownership, approval boundaries, evidence freshness, tracker ownership, question incorporation, and runtime-portability claims.
 - Clarified manual skill loading and the manual independent-verification path following review.
+- Added code-review skill adapted from Matt Pocock's skills repo (two-axis Standards/Spec review).
 - Checked UTF-8 readability and final ZIP integrity.
 
 The orchestrator prompt is approximately 487 whitespace-separated words. This is a size measurement, not a model-token estimate or a guarantee about host context use.

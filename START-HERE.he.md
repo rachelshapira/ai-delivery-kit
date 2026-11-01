@@ -19,6 +19,7 @@
 | מנהל | [orchestrator](agents/orchestrator.md) | [delivery-management](skills/delivery-management/SKILL.md) |
 | אפיון | [spec-agent](agents/spec-agent.md) | [business-spec](skills/business-spec/SKILL.md), [technical-spec](skills/technical-spec/SKILL.md) |
 | פיתוח | [developer-agent](agents/developer-agent.md) | [implementation](skills/implementation/SKILL.md), לצד Skills טכנולוגיים קיימים |
+| סקירת קוד | [code-reviewer-agent](agents/code-reviewer-agent.md) | [code-review](skills/code-review/SKILL.md) |
 | QA | [qa-agent](agents/qa-agent.md) | [verification](skills/verification/SKILL.md) |
 
 הוראות המנהל קצרות יחסית ונטענות בקביעות. כל Skill נטען כשמגיעים לשלב שלו. בדקו שסביבת ההרצה לא טוענת אוטומטית את כל תוכן החבילה לכל סוכן.
@@ -43,8 +44,9 @@
 5. פירוט התכולה הקרובה: דרישות, קריטריוני קבלה ותכנון טכני.
 6. בדיקת מוכנות: הרשאות ואישורים רלוונטיים, תלויות, שאלות חוסמות ו־DoD.
 7. פיתוח בצעדים קטנים עם בדיקות במהלך העבודה.
-8. QA עצמאי: התנהגות, התאמה לאפיון ולסטנדרטים, וראיות המתייחסות לגרסת קוד מסוימת.
-9. תיקונים, אימות חוזר, סקירה ומסירה. פריסה מנוהלת בנפרד לפי כללי הארגון.
+8. סקירת קוד: התאמה לסטנדרטים (Standards) ולאפיון (Spec) בשני צירים מקבילים.
+9. QA עצמאי: התנהגות, התאמה לאפיון ולסטנדרטים, וראיות המתייחסות לגרסת קוד מסוימת.
+10. תיקונים, אימות חוזר, סקירה ומסירה. פריסה מנוהלת בנפרד לפי כללי הארגון.
 
 שלבים 5–9 חוזרים לכל תכולה. שינוי מפעיל בדיקת השפעה; אינו מחזיר אוטומטית את כל הפרויקט להתחלה.
 

@@ -17,6 +17,7 @@ Honor existing project paths and tracker ownership. Verify relevant artifacts ag
 - Initial architecture and detailed design: spec-agent + technical-spec.
 - Planning, questions, changes, checkpoints, and transitions: delivery-management.
 - Implementation: developer-agent + implementation + relevant technology skills.
+- Code review: code-reviewer-agent + code-review.
 - Independent verification: qa-agent + verification.
 
 Read the applicable skill before executing that phase. Load only relevant source sections. Use one implementation task at a time by default. These names must be connected to actual agents and skills by the host; if unavailable, report the limitation instead of claiming delegation occurred.
@@ -32,7 +33,9 @@ Send task ID, objective, allowed scope, source baseline, REQ/AC references, rele
 ## Mandatory transitions
 Before implementation, confirm bounded approved scope, observable AC, sufficient technical direction, complete dependencies, no blocking question, and applicable DoD.
 
-Developer handoff means In verification, not Done. Before Done require current-candidate evidence for AC and DoD, independent verification, required human review, and updated artifacts. Check evidence freshness after any change.
+Developer handoff means Ready for review, not Done. Route to code-reviewer-agent for Standards and Spec axes check. Blocking review findings return to developer. Non-blocking findings become tech-debt items.
+
+After review passes, transition to In verification. Before Done require current-candidate evidence for AC and DoD, independent QA verification, required human review, and updated artifacts. Check evidence freshness after any change.
 
 Never invent business rules, approvals, or successful checks. Never weaken AC, tests, or mandatory DoD conditions to finish. Apply permissions and enforced host/CI gates; prompt instructions alone are not enforcement.
 
