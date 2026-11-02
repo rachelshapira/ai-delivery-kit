@@ -1,19 +1,45 @@
 # Package checks — v1.1
 
-Date: 2026-11-01
+Date: 2025-01-XX (updated)
+
+## Contents
+
+**Agents (4):**
+- orchestrator.md
+- spec-agent.md
+- developer-agent.md
+- verifier-agent.md
+
+**Skills (7):**
+- business-spec
+- technical-spec
+- verification
+- source-extraction
+- presentation
+- tdd
+- ponytail
+
+**Templates (2):**
+- templates/delivery.template.md
+- templates/decisions.template.md
+
+**Scripts (1):**
+- scripts/extract-pdfs.py
 
 ## Performed
-- Parsed YAML frontmatter for all six SKILL.md files: required name/description and matching folder names.
-- Checked local Markdown links and linked template destinations.
-- Confirmed five agent prompts, six skills, and four canonical project templates.
-- Reviewed the full bundle independently for lifecycle contradictions, template ownership, approval boundaries, evidence freshness, tracker ownership, question incorporation, and runtime-portability claims.
-- Clarified manual skill loading and the manual independent-verification path following review.
-- Added code-review skill adapted from Matt Pocock's skills repo (two-axis Standards/Spec review).
-- Checked UTF-8 readability and final ZIP integrity.
 
-The orchestrator prompt is approximately 487 whitespace-separated words. This is a size measurement, not a model-token estimate or a guarantee about host context use.
+- Verified all seven SKILL.md files exist with valid YAML frontmatter (name/description).
+- Checked local Markdown links point to existing files.
+- Confirmed four agent prompts reference correct skills.
+- Verified two templates exist in `templates/` folder.
+- Confirmed extract-pdfs.py script exists in `scripts/`.
+- Reviewed verification skill supports Blocked status and Not verified per-criterion.
+- Confirmed verifier-agent handoff includes BLOCKED status.
+- Verified decision ownership: spec-agent proposes, manager records.
+- Confirmed orchestrator startup handles missing delivery.md and reconciliation.
 
 ## Scope and limits
+
 These checks validate package structure and instruction consistency. They are not a live execution test of agents, an installed skill, a CI gate, or a native runtime integration.
 
 No application was implemented, no user environment was configured, and no live workflow success is claimed. Use examples/lifecycle-check.he.md in the target host to validate actual delegation, tools, persistence, permissions, and evidence handling.

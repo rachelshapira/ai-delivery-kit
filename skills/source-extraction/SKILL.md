@@ -29,11 +29,9 @@ Extract readable text from source documents and relevant context from existing c
 
 ### Document Extraction
 
-The kit does not include extraction scripts. Use your preferred tool:
-
-**PDF (using pdftotext or similar):**
+**PDF (included script):**
 ```bash
-pdftotext -layout "file.pdf" "file.md"
+python scripts/extract-pdfs.py "docs/sources"
 ```
 
 **DOCX (using pandoc):**

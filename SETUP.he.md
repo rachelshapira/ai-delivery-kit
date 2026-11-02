@@ -17,15 +17,25 @@
 | orchestrator | `agents/orchestrator.md` | קריאה, כתיבת מעקב והחלטות, הפעלת סוכנים, קבלת תוצאות ותקשורת עם המשתמש |
 | spec-agent | `agents/spec-agent.md` | קריאת מקורות ומסמכים, עריכת אפיונים וגישה לתיעוד טכני כשנדרש |
 | developer-agent | `agents/developer-agent.md` | קוד, סביבת build/test, כלים טכנולוגיים נדרשים |
-| qa-agent | `agents/qa-agent.md` | קריאת קוד ואפיונים, הרצת בדיקות ו־API/דפדפן כשנדרש |
+| verifier-agent | `agents/verifier-agent.md` | קריאת קוד ואפיונים, הרצת בדיקות ו־API/דפדפן כשנדרש |
 
 המנהל צריך לקבל פלט וראיות מכל סוכן. אם הסביבה אינה תומכת בהאצלה, אפשר להפעיל את התפקידים ידנית לפי ההנחיות; יש לתעד זאת ולא לטעון שבוצעה האצלה או סקירה עצמאית שלא התקיימו.
 
-בהפעלה ידנית, העבירו את חוזה המשימה ואת ההפניות לתוצרים לכל תפקיד בנפרד. לצורך אימות עצמאי השתמשו בסוקר אנושי נפרד או בשיחת QA נפרדת שקוראת את המקורות והקוד בעצמה. הדבר אינו מבטל סקירה אנושית אם היא נדרשת בארגון. אם אין אפשרות לספק את האימות העצמאי שנקבע, העבודה נשארת ממתינה לאימות ואינה מסומנת Done.
+בהפעלה ידנית, העבירו את חוזה המשימה ואת ההפניות לתוצרים לכל תפקיד בנפרד. לצורך אימות עצמאי השתמשו בסוקר אנושי נפרד או בשיחת אימות נפרדת שקוראת את המקורות והקוד בעצמה. הדבר אינו מבטל סקירה אנושית אם היא נדרשת בארגון. אם אין אפשרות לספק את האימות העצמאי שנקבע, העבודה נשארת ממתינה לאימות ואינה מסומנת Done.
 
 ## 3. קישור Skills
 
-רשמו את חמש תיקיות ה־Skills במנגנון הטעינה הנתמך בסביבה. התיקייה כוללת `SKILL.md` ו־assets לפי הצורך. שמרו את שמות ה־Skills כפי שמופיעים ב־frontmatter ובהוראות הניתוב.
+רשמו את שבע תיקיות ה־Skills במנגנון הטעינה הנתמך בסביבה. התיקייה כוללת `SKILL.md` ו־assets לפי הצורך. שמרו את שמות ה־Skills כפי שמופיעים ב־frontmatter ובהוראות הניתוב.
+
+| Skill | תיקייה |
+|-------|--------|
+| business-spec | `skills/business-spec/` |
+| technical-spec | `skills/technical-spec/` |
+| verification | `skills/verification/` |
+| source-extraction | `skills/source-extraction/` |
+| presentation | `skills/presentation/` |
+| tdd | `skills/tdd/` |
+| ponytail | `skills/ponytail/` |
 
 אם אין מנגנון Skills ייעודי, הורו לתפקיד הפעיל לקרוא את קובץ ה־`SKILL.md` המלא המתאים לפני תחילת השלב, ואת התבנית המקושרת כשנוצר מסמך. זו טעינה ידנית של הוראות; אין לטעון שכלי Skills או האצלה הופעלו כשלא קיימים.
 
@@ -38,7 +48,7 @@
 בתחילת הפרויקט קבעו בפועל ושמרו ב־delivery.md:
 - מיקום מסמכי הפרויקט והמקורות.
 - מקור ניהול המשימות: מקומי או tracker וקישורו.
-- גורמי ההכרעה העסקיים, הטכניים, QA ופריסה; Unknown אם טרם נקבעו.
+- גורמי ההכרעה העסקיים, הטכניים, אימות ופריסה; Unknown אם טרם נקבעו.
 - מקור ה־DoD.
 - אופן זיהוי גרסת המקור והקוד שנבדק.
 
@@ -58,8 +68,8 @@
 |---|---|
 | `skills/business-spec/assets/business-spec.he.template.md` | `docs/business-spec.he.md` |
 | `skills/technical-spec/assets/technical-spec.template.md` | `docs/technical-spec.md` |
-| `skills/delivery-management/assets/delivery.template.md` | `docs/delivery.md` |
-| `skills/delivery-management/assets/decisions.template.md` | `docs/decisions.md` |
+| `templates/delivery.template.md` | `docs/delivery.md` |
+| `templates/decisions.template.md` | `docs/decisions.md` |
 
 ## 7. בדיקת חיבור לפני שימוש רחב
 

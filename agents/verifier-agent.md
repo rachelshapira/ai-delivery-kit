@@ -45,7 +45,10 @@ If any check fails:
 ## Handoff
 Return to orchestrator with:
 - Task ID
-- Verification status: PASS / FAIL
-- Evidence for each AC
+- Verification status: PASS / FAIL / BLOCKED
+- Evidence for each AC (with status: ✅ Pass / ❌ Fail / ⚠️ Not verified)
 - Issues found (if FAIL)
-- Next action: DONE / return to developer
+- Blocking reason (if BLOCKED — e.g., missing environment, unavailable test, missing prerequisite)
+- Next action: DONE / return to developer / escalate to manager (if BLOCKED)
+
+**BLOCKED status:** When verification cannot complete due to missing prerequisites (environment unavailable, mandatory test cannot run, access denied), return BLOCKED to the orchestrator. The manager decides how to proceed — verification cannot be waived.
