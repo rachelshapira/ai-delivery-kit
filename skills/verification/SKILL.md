@@ -1,33 +1,146 @@
 ---
 name: verification
-description: Independently verify implemented changes against acceptance criteria, design, standards, and Definition of Done. Use for QA, code review, regression assessment, and re-verification after fixes.
+description: Single verification owner — run tests, verify ACs and DoD, check coding standards. Combines code inspection with executable checks.
 ---
 
 # Verification
 
-## Establish scope and candidate
-Read the originating task, authoritative REQ/AC, baseline, relevant decisions/design, standards, and DoD. Inspect the actual diff. Identify the tested commit/build; if uncommitted changes exist, record their patch/file snapshot. A branch name alone does not pin the tested artifact. Record environment, relevant configuration, and time.
+One verification owner handles both code inspection and executable checks.
 
-Treat developer explanations as context, not proof. Use a separate review context where possible; report limitations honestly.
+## Responsibilities
 
-## Specification review
-Check required behavior, AC, business rules, permission/data-scope enforcement, alternative/failure paths, and unapproved additions. Compare to the authoritative requirements and current accepted decisions.
+1. **Run tests** — Execute test suite, report pass/fail
+2. **Verify ACs** — Check each acceptance criterion is met
+3. **Verify DoD** — Check Definition of Done items
+4. **Check standards** — Review code against documented standards
+5. **Report evidence** — Provide proof of verification
 
-## Standards review
-Check project conventions, accepted architecture, security/data integrity, justified complexity, contracts, and required compatibility. Keep these findings distinguishable from specification findings. Use automated tooling for mechanical rules.
+## Process
 
-## Execute and classify
-Run proportionate automated, API/integration, browser, permission, and regression checks. A static review alone does not prove runtime behavior. Classify product defects, automation defects, environment failures, requirement ambiguity, and requested behavior changes.
+### 1. Identify what to verify
 
-Report each criterion Pass, Fail, or Not verified with evidence. Do not change the requirement, lower an assertion, or add arbitrary waits to force success. Return ambiguity to the orchestrator.
+From the task or handoff:
+- REQ/AC references from spec
+- DoD items from delivery.md or project standards
+- Files changed (diff from branch point)
 
-## Evidence and re-verification
-Link results to candidate, environment, check, and time. After a fix, verify on the new candidate and rerun impacted regressions. If anything changed after the tested snapshot, tell the orchestrator that the previous Pass may be stale. Retain unaffected evidence only with a reasoned impact assessment.
+### 2. Run executable checks
 
-## DoD and human approval
-Assess each applicable DoD condition. Distinguish legitimate non-applicability from inability to execute a required check. Mandatory incomplete conditions prevent completion. Do not waive them or replace a required human code/release review with AI review.
+```bash
+# Run test suite
+npm test / dotnet test / pytest
 
-Use Pass when required verification succeeds; Fail for demonstrated blocking defects; Blocked when required verification cannot be completed. Report both defects and verification blockers if both exist. The orchestrator determines workflow transitions.
+# Run linters if configured
+npm run lint / dotnet format --verify-no-changes
 
-## Return
-Return task ID, outcome, candidate/environment/time, AC results/evidence, specification findings, standards findings, DoD results, reproduction details, limitations, and next action. Do not independently close tasks, merge, deploy, or change product code unless separately assigned.
+# Build to catch compile errors
+npm run build / dotnet build
+```
+
+Record output. All must pass before proceeding.
+
+### 3. Verify each AC
+
+For each acceptance criterion in scope:
+
+| AC | Evidence | Status |
+|----|----------|--------|
+| AC-001-01 | Test `login.spec.ts:15` passes | ✅ |
+| AC-001-02 | Test `login.spec.ts:28` passes | ✅ |
+| AC-001-03 | Manual check: filtered by providerId | ✅ |
+
+Evidence types:
+- **Test**: Name the test file and line
+- **Manual**: Describe what was checked
+- **Output**: Quote relevant output
+
+### 4. Browser and accessibility checks
+
+For UI changes, verify in actual browser:
+- User journeys work as specified (walk through each flow)
+- Validation messages appear correctly
+- Error/loading/empty states display properly
+- Relevant screen sizes (mobile, tablet, desktop)
+- Keyboard navigation (Tab order, Enter/Escape handling)
+- RTL layout (if applicable)
+- Screen reader basics (labels, ARIA, focus management)
+
+Evidence: Screenshots or recordings for visual behavior; test output for automated a11y checks.
+
+### 5. Check standards
+
+Review diff against:
+- `CODING_STANDARDS.md` or equivalent
+- `technical-spec.md` patterns section
+- Language/framework conventions
+
+Look for:
+- Hard violations (cite standard + file:line)
+- Code smells (judgement calls, non-blocking)
+
+### 6. Report
+
+```markdown
+## Verification Report
+
+**Task:** [ID] — [title]
+**Commit:** [sha]
+**Branch:** [name]
+
+### Tests
+- Total: X passed, Y failed, Z skipped
+- [List any failures]
+
+### Acceptance Criteria
+
+| AC | Evidence | Status |
+|----|----------|--------|
+| AC-xxx | [evidence] | ✅/❌ |
+
+### DoD
+- [ ] Tests pass
+- [ ] No lint errors
+- [ ] Builds successfully
+- [ ] ACs verified
+
+### Standards
+- **Violations:** [list or "none"]
+- **Judgement calls:** [list or "none"]
+
+### Result
+- **Pass** — ready for release approval
+- **Fail** — return to developer with: [list issues]
+```
+
+## Failure handling
+
+If verification fails:
+1. Return to developer with specific issues
+2. Developer fixes
+3. **Re-run affected checks** — not just the failed ones, but anything the fix might have affected
+4. Repeat until pass
+
+## When separate reviewer is optional
+
+Low-risk changes may skip a separate human reviewer:
+- Documentation-only changes
+- Config changes with test coverage
+- Trivial fixes (typos, formatting)
+
+**Verification itself is never optional.** Tests must run. ACs must be checked.
+
+## Integration
+
+### Handoff from developer
+Developer provides:
+- Task ID and REQ/AC references
+- Commit or branch to verify
+- Evidence of local checks passed
+- Any known issues or limitations
+
+### Return to orchestrator
+- Task ID
+- Verification status (pass/fail)
+- Evidence for each AC
+- Issues found (if any)
+- Next action (release approval / return to developer)

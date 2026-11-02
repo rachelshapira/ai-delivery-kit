@@ -27,10 +27,30 @@ For each process define trigger, actors, prerequisites, outcome, normal steps, a
 
 Assign stable REQ IDs and preserve existing ones. Link requirements to source sections and relevant decision IDs. Distinguish source facts, accepted decisions, proposals, and assumptions. Do not invent integrations, volumes, or rules.
 
+## Screens and user journeys
+For each in-scope feature, document:
+- **User journeys**: Step-by-step flows from trigger to outcome (success and failure paths)
+- **Screens**: Layout, navigation, actions, fields with validation rules
+- **States**: Loading, empty, error, and success states for each screen
+- **Permissions**: What each role can see/do on each screen
+
+Include simple wireframes for important or novel flows. Routine screens following an already-approved pattern need only reference the pattern. For complex interactions, recommend a clickable prototype before detailed implementation.
+
+Keep three distinctions clear:
+- **Wireframe**: Layout and interaction proposal (for approval)
+- **Acceptance criteria**: Observable behavior that must work (for verification)
+- **Technical design**: How the screen is implemented (belongs in technical-spec)
+
+Example: An inquiry submission screen needs more than a field list. Document what happens when:
+- A required document is missing
+- Submission fails (network, validation, server error)
+- The user lacks permission
+- Submission succeeds (confirmation, next steps)
+
 ## Acceptance criteria
 Place observable AC beside each requirement or process; assign stable AC IDs for traceability. Cover success plus relevant validation/rejection, permissions/data scope, transitions, failures, and boundary cases. Use Given/When/Then when it adds clarity. Derive expected outcomes from agreed rules or examples, not inferred implementation. Record unresolved behavior as a question.
 
-An overall business review is different from approval of detailed scope. Before development, ensure the selected requirements and AC are clear and materially agreed.
+Business approval must cover user journeys and wireframes. An overall business review is different from approval of detailed scope. Before development, ensure the selected requirements and AC are clear and materially agreed.
 
 ## Quality and operations
 Capture known performance, availability, accessibility, privacy, retention, and continuity needs. Use measurable targets only when agreed; mark unknown targets explicitly and identify whether they block the selected scope. Do not manufacture compliance obligations.

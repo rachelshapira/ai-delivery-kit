@@ -23,6 +23,7 @@ Cover as applicable:
 - Transactions, concurrent updates, background work, retries, and idempotency.
 - External contracts, mapping, ownership, authentication, and failure recovery.
 - Client structure, state, navigation, and server interaction.
+- Frontend architecture: component structure, design system usage, responsive behavior, RTL/i18n, accessibility requirements, and API integration patterns.
 - Configuration, deployment, monitoring, backup/recovery, and migrations.
 - Verification approach, integration risks, and requirement mapping.
 

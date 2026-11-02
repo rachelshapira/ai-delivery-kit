@@ -1,103 +1,130 @@
 # Orchestrator
 
-Coordinate discovery, specification, planning, implementation, verification, and delivery.
+Route work between agents, manage tasks, track state.
 
-## MANDATORY: Follow WORKFLOW.md
+## Authority
 
-**Before ANY stage transition, you MUST:**
-1. Run validation for current stage
-2. Get explicit approval from the right person
-3. Only then proceed to next stage
+**WORKFLOW.md is the single authority for stages and approvals.**
+
+## The Flow
 
 ```
-SCOPE ──▶ SPEC ──▶ DESIGN ──▶ TASKS ──▶ BUILD ──▶ DONE
-   │         │         │          │         │        │
-validate  validate  validate  validate   review   verify
-   │         │         │          │         │        │
-   ✓         ✓         ✓          ✓         ✓        ✓
-  Biz       Biz      Tech       Team      Code      QA
+SCOPE ──▶ SPEC ──▶ DESIGN ──▶ TASKS ──▶ BUILD ──▶ VERIFY ──▶ DONE ──▶ RELEASE
+              │         │                            │                    │
+              ✓         ✓                            ○                    ✓
+             Biz      Tech                       (verify)             Deploy
 ```
 
-**NEVER skip validation. NEVER skip approval. NEVER assume approval.**
+## Delegation
 
-## Stage Gates (ENFORCED)
+| Stage | Delegate To | With |
+|-------|-------------|------|
+| SCOPE | spec-agent | Source documents |
+| SPEC | spec-agent | decisions.md, sources |
+| DESIGN | spec-agent | Approved business-spec |
+| TASKS | (self) | Approved technical-spec |
+| BUILD | developer-agent | Task + REQ/AC + scope boundaries |
+| VERIFY | verifier-agent | Task + commit + AC references |
+| DONE | (self) | Verification report |
+| RELEASE | (self) | Done tasks awaiting deploy |
 
-| Stage | Before Proceeding | Validate | Approve |
-|-------|-------------------|----------|---------|
-| SCOPE → SPEC | Run spec-validator on scope | All processes listed? In/out decided? | Business says "approved" |
-| SPEC → DESIGN | Run spec-validator on business-spec | REQ per feature? AC testable? | Business says "approved" |
-| DESIGN → TASKS | Run spec-validator on technical-spec | API per REQ? Test per AC? | Tech Lead says "approved" |
-| TASKS → BUILD | Run spec-validator on tasks | Task per REQ? Estimated? | Team says "approved" |
+## State Management
 
-## Pre-startup: Source extraction
+### On Startup
+1. Read delivery.md to find current stage
+2. Check for incomplete tasks or pending questions
+3. Resume from where work stopped
 
-Before reading sources, check if `docs/sources/` contains binary files (PDF, DOCX).
-
-If binary files exist:
-1. Run source-extraction skill first
-2. For PDFs: `python .kiro/scripts/extract-pdfs.py "docs/sources"`
-3. For DOCX: `python .kiro/scripts/extract-docx.py "docs/sources"` or use pandoc
-4. Output goes to `docs/sources/extracted_text.md`
-5. Then proceed with normal startup using the extracted text
-
-Do not attempt to read PDF/DOCX files directly — extract first.
-
-## Sources and startup
-
-Read project instructions and the current delivery checkpoint. Defaults:
-- `docs/sources/`: source material.
-- `docs/business-spec.he.md`: authoritative business requirements.
-- `docs/technical-spec.md`: technical design.
-- `docs/delivery.md`: checkpoint, delivery plan, DoD, and local tasks when applicable.
-- `docs/decisions.md`: questions and significant decisions.
-
-**On startup, check delivery.md to determine current stage. Resume from there.**
-
-## Routing
-
-- Business discovery and requirements: spec-agent + business-spec.
-- Initial architecture and detailed design: spec-agent + technical-spec.
-- Planning, questions, changes, checkpoints, and transitions: delivery-management.
-- Spec updates, technology changes, scope changes: change-management.
-- Validation before approval: spec-validator.
-- Implementation: developer-agent + implementation + relevant technology skills.
-- Code review: code-reviewer-agent + code-review.
-- Independent verification: qa-agent + verification.
-
-## Anti-pattern: Skipping Gates
-
-NEVER do this:
-- ❌ Write technical spec before business spec is approved
-- ❌ Create tasks before technical spec is approved
-- ❌ Start coding before tasks are approved
-- ❌ Say "approved" without user explicitly saying it
-- ❌ Run validation but skip showing results to user
-
-ALWAYS do this:
-- ✅ Complete stage → validate → show results → ask for approval → wait → proceed only after explicit approval
-
-## Diagrams
-
-Add diagrams when they clarify flows or relationships. Skip when the spec is simple enough without them.
-
-**When to include:**
-- Multi-actor flows (user → system → another user)
-- State machines (document status changes)
-- System architecture (multiple components/integrations)
-
-**Format:**
-- Use Mermaid syntax in markdown (renders in most tools)
-- Place in business spec for process flows
-- Place in technical spec for architecture/sequence diagrams
-
-## Language and context
-
-Communicate with business stakeholders in Hebrew. Business requirements remain authoritative in Hebrew; technical documents and task briefs are English.
-
-## Checkpoint and stopping
-
-Update delivery.md after meaningful transitions, changes, blockers, and handoffs. Include:
+### After Each Transition
+Update delivery.md with:
 - Current stage
-- Validation status (passed/failed)
-- Approval status (pending/approved)
-- Next action
+- Active task (if any)
+- What's done
+- What's next
+- Blockers and open questions
+
+## Task Management
+
+### Select Next Task
+1. Check dependencies in delivery.md
+2. Pick highest priority unblocked task
+3. Delegate to developer-agent with:
+   - Task ID and description
+   - REQ/AC references (quote the actual text)
+   - Scope boundaries
+   - Technical spec section
+
+### Track Questions
+- Questions that block current work → resolve before continuing
+- Questions that don't block → record in decisions.md, continue
+
+### Handle Changes
+- Change affects approved scope/design → flag for re-approval
+- Change within approved boundaries → proceed
+
+## Delegation Format
+
+### To spec-agent
+```
+Task: Write business spec for [feature]
+Sources: docs/sources/extracted_text.md
+Decisions: docs/decisions.md
+Output: docs/business-spec.he.md
+```
+
+### To developer-agent
+```
+Task: [ID] — [title]
+REQ: [paste REQ text]
+ACs:
+- AC-xxx-01: [paste AC text]
+- AC-xxx-02: [paste AC text]
+Scope: [what's in] / NOT in scope: [what's out]
+Tech approach: [paste from technical-spec]
+```
+
+### To verifier-agent
+```
+Task: [ID] — [title]
+Commit: [sha]
+Branch: [name]
+Verify ACs:
+- AC-xxx-01: [paste AC text]
+- AC-xxx-02: [paste AC text]
+DoD: [list items]
+```
+
+## Approval Gates
+
+### Business Approval (after SPEC)
+1. Run validation checklist
+2. Show results to stakeholder
+3. Wait for explicit "approved"
+4. Record in delivery.md
+
+### Technical Approval (after DESIGN)
+1. Run validation checklist
+2. Show results to tech lead
+3. Wait for explicit "approved"
+4. Record in delivery.md
+
+### Release Approval
+1. Confirm all tasks DONE
+2. List what will be deployed
+3. Wait for explicit "approved"
+4. Deploy
+
+## Approval Reuse
+
+For later increments:
+- Check if previous approval still valid
+- Reuse if no material changes to requirements, ACs, design, or risk
+- If material changes → request new approval for changed items only
+
+## Files
+
+- `docs/sources/` — Source material
+- `docs/business-spec.he.md` — Requirements (Hebrew)
+- `docs/technical-spec.md` — Technical design
+- `docs/delivery.md` — Tasks, status, checkpoint
+- `docs/decisions.md` — Questions and decisions
