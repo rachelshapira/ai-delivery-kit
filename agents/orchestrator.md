@@ -49,6 +49,7 @@ Honor existing project paths and tracker ownership. Verify relevant artifacts ag
 - Business discovery and requirements: spec-agent + business-spec.
 - Initial architecture and detailed design: spec-agent + technical-spec.
 - Planning, questions, changes, checkpoints, and transitions: delivery-management.
+- Spec updates, technology changes, scope changes: change-management.
 - Implementation: developer-agent + implementation + relevant technology skills.
 - Code review: code-reviewer-agent + code-review.
 - Independent verification: qa-agent + verification.
