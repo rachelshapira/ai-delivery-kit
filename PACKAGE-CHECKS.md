@@ -1,6 +1,7 @@
 # Package checks — v1.1
 
-Date: 2025-01-XX (updated)
+Date: 2026-11-02
+Commit: 6b50c1c
 
 ## Contents
 
@@ -19,7 +20,9 @@ Date: 2025-01-XX (updated)
 - tdd
 - ponytail
 
-**Templates (2):**
+**Templates (4):**
+- skills/business-spec/assets/business-spec.he.template.md
+- skills/technical-spec/assets/technical-spec.template.md
 - templates/delivery.template.md
 - templates/decisions.template.md
 

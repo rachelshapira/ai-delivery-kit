@@ -84,10 +84,11 @@ Look for:
 ## Verification Report
 
 **Task:** [ID] — [title]
-**Commit:** [sha] (exact commit verified)
-**Branch:** [name]
+**Commit:** [sha] (exact commit verified — required)
+**Branch:** [name] (supplementary reference)
 **Environment:** [local / CI / staging — specify]
-**Uncommitted changes:** [none / list any — uncommitted changes invalidate verification]
+
+Note: Verification requires a clean, committed candidate. The exact SHA is the authoritative reference. Uncommitted changes cannot be verified — commit first.
 
 ### Tests
 - Total: X passed, Y failed, Z skipped
