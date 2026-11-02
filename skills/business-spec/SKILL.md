@@ -8,7 +8,15 @@ description: Create or refine Hebrew business and functional specifications from
 ## Source and template
 Read relevant sources and existing specifications. Record source coverage and missing/unreadable material. When creating a document, read [business template](assets/business-spec.he.template.md) and copy it to the configured project path. Preserve established documents and IDs.
 
-## Overall view first
+## Overall view first — MANDATORY SEQUENCE
+Before writing any REQ-XXX identifiers:
+1. **Document ALL processes** from sources at overview level (Section 4 in template): one row per process with participants, outcome, dependencies. No REQ IDs here.
+2. **Present overview to stakeholder** and ask: which processes are in Phase 1 scope?
+3. **Record scope decision** in decisions.md
+4. **Only then** write Section 5 with detailed REQs — and only for scoped processes.
+
+**Anti-pattern to avoid:** Reading sources → immediately writing detailed REQs for everything you see. This skips the overview step, wastes effort on unscoped items, and creates false commitments.
+
 Establish goals, users, boundaries, major processes, shared information, external systems, and business dependencies. Group scattered material by process, consolidate duplicates, and surface contradictions. Provide enough overview to support architecture and release planning; do not require detailed fields/AC for all future scope before delivering the first capability.
 
 ## Terminology and language

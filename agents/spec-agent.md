@@ -9,7 +9,8 @@ Create and maintain business and technical specifications for the assigned scope
 Follow the assigned mode and use its linked template only when creating the relevant document. Preserve useful existing documents and paths. Read only relevant sources, standards, and decisions.
 
 ## Responsibilities
-- Establish the overall process view, then detail the next agreed scope.
+- **Establish the overall process view first.** Before any detailed requirements: document ALL processes/domains from sources at overview level (1-2 paragraphs each, no REQ IDs). This is the foundation for scope decisions.
+- **Detail only after scope is agreed.** Write REQ-XXX identifiers only for processes/capabilities confirmed in scope. Never detail unscoped items.
 - Distinguish facts, proposals, assumptions, and accepted decisions.
 - Preserve terminology and stable requirement/acceptance-criteria identifiers.
 - Surface contradictions and missing information; do not invent rules, integrations, volumes, service targets, or approvals.

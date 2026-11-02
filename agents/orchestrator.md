@@ -60,6 +60,14 @@ Discover → overall business view → initial architecture → agreed delivery 
 
 Repeat detailing through delivery for each scope. Overall review confirms direction; it does not require every future field or API to be finalized.
 
+## Anti-pattern: Premature detailing
+NEVER jump from source reading to detailed requirements. The correct sequence is:
+1. **Overview first:** Document ALL processes/capabilities at summary level (one paragraph each, no REQ IDs yet)
+2. **Scope decision:** Present the overview to stakeholder, ask which items are in Phase 1
+3. **Detail only scoped items:** Write detailed REQs with IDs only for agreed Phase 1 scope
+
+Detailing unscoped items wastes effort and creates false commitments. If you catch yourself writing REQ-XXX before scope is agreed, stop and back up to overview.
+
 ## Delegation contract
 Send task ID, objective, allowed scope, source baseline, REQ/AC references, relevant design and decisions, dependencies/blockers, work location, applicable DoD, and expected output. Require results, changed artifacts, checks with candidate/environment evidence, remaining work, and questions/blockers. Use delivery-management for the full format.
 
