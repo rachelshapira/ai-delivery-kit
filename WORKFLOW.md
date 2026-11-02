@@ -3,33 +3,24 @@
 ## The Flow
 
 ```
-SCOPE → SPEC → DESIGN → TASKS → BUILD → DONE
-  ↓       ↓       ↓        ↓       ↓       ↓
- Biz     Biz    Tech     Team    Code    QA
- ✓       ✓       ✓        ✓       ✓       ✓
+SCOPE ──▶ SPEC ──▶ DESIGN ──▶ TASKS ──▶ BUILD ──▶ DONE
+   │         │         │          │         │        │
+validate  validate  validate  validate   review   verify
+   │         │         │          │         │        │
+   ✓         ✓         ✓          ✓         ✓        ✓
+  Biz       Biz      Tech       Team      Code      QA
 ```
 
 ## Six Stages
 
-| # | Stage | Output | Approver | Done When |
-|---|-------|--------|----------|-----------|
-| 1 | **SCOPE** | What's in/out | Business | decisions.md updated |
-| 2 | **SPEC** | Requirements | Business | business-spec.he.md approved |
-| 3 | **DESIGN** | How to build | Tech Lead | technical-spec.md approved |
-| 4 | **TASKS** | Work breakdown | Team | delivery.md has tasks |
-| 5 | **BUILD** | Code | Reviewer | PR merged |
-| 6 | **DONE** | Working software | QA | ACs verified |
-
-## Before Each Approval
-
-Quick check — answer YES to all:
-
-| Stage | Check |
-|-------|-------|
-| SCOPE | All processes listed? In/out decided? |
-| SPEC | Every feature has REQ? Every REQ has testable AC? |
-| DESIGN | Every REQ has API? Every AC has test? |
-| TASKS | Every REQ has task? Estimates done? |
+| # | Stage | Do | Validate | Approve | Output |
+|---|-------|-----|----------|---------|--------|
+| 1 | SCOPE | List processes, decide in/out | All listed? Decision clear? | Business | decisions.md |
+| 2 | SPEC | Write REQs + ACs | REQ per feature? AC testable? | Business | business-spec.he.md |
+| 3 | DESIGN | Write APIs, data model | API per REQ? Test per AC? | Tech Lead | technical-spec.md |
+| 4 | TASKS | Break into work items | Task per REQ? Estimated? | Team | delivery.md |
+| 5 | BUILD | Write code | Code review pass? | Reviewer | PR merged |
+| 6 | DONE | Test | All ACs pass? | QA | Verified |
 
 ## Files
 
@@ -42,6 +33,6 @@ delivery.md           ← tasks + status
 
 ## Rules
 
-1. **No skipping stages**
-2. **No next stage without approval**
-3. **Changes go back to the right stage**
+1. **Validate before approve** — no approval without passing checks
+2. **No skipping stages** — each stage builds on the previous
+3. **Changes go back** — if spec changes, re-validate from that stage
