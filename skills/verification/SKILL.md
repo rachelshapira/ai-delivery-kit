@@ -84,8 +84,10 @@ Look for:
 ## Verification Report
 
 **Task:** [ID] — [title]
-**Commit:** [sha]
+**Commit:** [sha] (exact commit verified)
 **Branch:** [name]
+**Environment:** [local / CI / staging — specify]
+**Uncommitted changes:** [none / list any — uncommitted changes invalidate verification]
 
 ### Tests
 - Total: X passed, Y failed, Z skipped
@@ -95,7 +97,9 @@ Look for:
 
 | AC | Evidence | Status |
 |----|----------|--------|
-| AC-xxx | [evidence] | ✅/❌ |
+| AC-xxx | [evidence] | ✅ Pass / ❌ Fail / ⚠️ Not verified |
+
+Note: "Not verified" means the criterion could not be checked (missing environment, test not available). This is different from Fail. Missing mandatory evidence prevents Done status.
 
 ### DoD
 - [ ] Tests pass
@@ -110,6 +114,7 @@ Look for:
 ### Result
 - **Pass** — ready for release approval
 - **Fail** — return to developer with: [list issues]
+- **Blocked** — verification cannot complete: [reason — missing environment, unavailable test, etc.]
 ```
 
 ## Failure handling
@@ -122,10 +127,12 @@ If verification fails:
 
 ## When separate reviewer is optional
 
-Low-risk changes may skip a separate human reviewer:
+Separate additional review is optional only where project policy permits:
 - Documentation-only changes
 - Config changes with test coverage
 - Trivial fixes (typos, formatting)
+
+**Required human approval cannot be waived by an agent.** If project or organizational policy requires human review, that gate must be passed regardless of risk assessment.
 
 **Verification itself is never optional.** Tests must run. ACs must be checked.
 

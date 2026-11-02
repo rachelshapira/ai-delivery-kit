@@ -29,19 +29,22 @@ Extract readable text from source documents and relevant context from existing c
 
 ### Document Extraction
 
-PDF:
-```powershell
-python .kiro/scripts/extract-pdfs.py "docs/sources"
+The kit does not include extraction scripts. Use your preferred tool:
+
+**PDF (using pdftotext or similar):**
+```bash
+pdftotext -layout "file.pdf" "file.md"
 ```
 
-DOCX:
-```powershell
-python .kiro/scripts/extract-docx.py "docs/sources"
-```
-
-Or use pandoc:
-```powershell
+**DOCX (using pandoc):**
+```bash
 pandoc -f docx -t markdown "file.docx" -o "file.md"
+```
+
+**Alternative: Python libraries**
+```python
+# PDF: PyPDF2, pdfplumber, or pymupdf
+# DOCX: python-docx
 ```
 
 Output: `docs/sources/extracted_text.md`

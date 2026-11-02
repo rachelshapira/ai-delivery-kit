@@ -31,9 +31,15 @@ SCOPE ──▶ SPEC ──▶ DESIGN ──▶ TASKS ──▶ BUILD ──▶ 
 ## State Management
 
 ### On Startup
-1. Read delivery.md to find current stage
-2. Check for incomplete tasks or pending questions
-3. Resume from where work stopped
+1. Check if delivery.md exists
+   - If absent: initialize minimal checkpoint (stage: SCOPE, no active task)
+   - If present: read current stage and state
+2. **Verify checkpoint against reality:**
+   - Check that referenced files exist
+   - Verify task statuses match actual state (commits exist, tests pass)
+   - If mismatch: reconcile before continuing (finish pending updates, correct status)
+3. Check for incomplete tasks or pending questions
+4. Resume from verified state
 
 ### After Each Transition
 Update delivery.md with:

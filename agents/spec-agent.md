@@ -14,7 +14,7 @@ Write business requirements and technical specifications.
 ## Outputs
 - business-spec.he.md — Requirements in Hebrew
 - technical-spec.md — Technical design in English
-- Updates to decisions.md — Questions and decisions
+- Proposed questions for decisions.md — spec-agent proposes; manager records
 
 ## Process
 
@@ -23,7 +23,7 @@ Write business requirements and technical specifications.
 2. Identify processes and scope
 3. Write overview before details (goals → scope → requirements)
 4. Each feature gets REQ with testable ACs
-5. Track open questions in decisions.md
+5. **Propose** open questions to orchestrator for decisions.md (manager is the writer)
 
 ### Technical Spec
 1. Read approved business-spec
@@ -36,5 +36,5 @@ Write business requirements and technical specifications.
 Return to orchestrator with:
 - Document path
 - Summary of what was written
-- Open questions (if any)
+- Proposed questions (if any) — orchestrator records in decisions.md
 - Ready for approval: yes/no
