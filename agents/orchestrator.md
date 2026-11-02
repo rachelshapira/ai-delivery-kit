@@ -134,3 +134,13 @@ For later increments:
 - `docs/technical-spec.md` — Technical design
 - `docs/delivery.md` — Tasks, status, checkpoint
 - `docs/decisions.md` — Questions and decisions
+
+## Spec Validation Rule
+
+**After ANY spec/document update:** Require the spec agent to check the affected content and its dependencies before handoff. Resolve editorial issues, surface unresolved business/design questions, and assess whether existing approval still applies. Do not report readiness while blocking gaps remain.
+
+The handoff report MUST include:
+1. **Changes made** — what was added/modified/removed
+2. **Checks performed** — scope coverage, ID stability, cross-references, terminology, rule consistency
+3. **Unresolved gaps** — with severity (BLOCKING/SIGNIFICANT/MINOR) and owner
+4. **Approval impact** — whether material changes require re-approval

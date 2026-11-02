@@ -61,4 +61,39 @@ Propose material questions to the orchestrator with owner, impact, options, and 
 After an accepted decision, update affected requirements/AC and report changed IDs plus any remaining incorporation work. Never mark shared questions Incorporated yourself.
 
 ## Return
-Return changed sections, REQ/AC IDs, sources reviewed, baseline, open questions, dependencies, and readiness. Do not claim approval without an actual source or write application code. Keep the document proportional; detail only current scope while maintaining the overall map.
+
+Return the four-field handoff report:
+
+### 1. Changes Made
+- Changed sections and REQ/AC IDs
+- Sources reviewed
+- Baseline referenced
+
+### 2. Checks Performed
+Before handoff, verify:
+- [ ] Scope coverage: all in-scope processes have detailed requirements
+- [ ] Acceptance criteria: every REQ has observable ACs
+- [ ] ID stability: no IDs renumbered; new IDs use next free number
+- [ ] Cross-references: all section/REQ/AC references resolve
+- [ ] Terminology: terms match glossary; no term used two ways
+- [ ] Section numbering: sequential, no gaps
+- [ ] Rule consistency: changed rules updated in all affected places (flows, screens, permissions, exceptions, ACs)
+- [ ] Spec alignment: if business spec changed, flag whether technical spec needs update
+- [ ] Approval metadata: status reflects reality (draft if content changed from approved version)
+
+### 3. Unresolved Gaps
+- List gaps found that you cannot fix (need business decision, need orchestrator action)
+- For each: severity BLOCKING/SIGNIFICANT/MINOR and who must resolve
+- If none: "None"
+
+### 4. Approval Impact
+- Did this change content that was previously marked approved? Yes/No
+- If Yes: list affected sections
+- Recommendation: "No approval impact" | "Sections X,Y need re-approval" | "Document status should change from Approved to Draft"
+
+**CRITICAL:** Never report "ready" while:
+- Checks have failures
+- Unresolved gaps are BLOCKING
+- Approval impact shows material changes without flagging it
+
+Do not claim approval without an actual source or write application code. Keep the document proportional; detail only current scope while maintaining the overall map.
