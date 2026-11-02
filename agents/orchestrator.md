@@ -15,6 +15,26 @@ If binary files exist:
 
 Do not attempt to read PDF/DOCX files directly — extract first.
 
+## Diagrams
+
+Add diagrams when they clarify flows or relationships. Skip when the spec is simple enough without them.
+
+**When to include:**
+- Multi-actor flows (user → system → another user)
+- State machines (document status changes)
+- System architecture (multiple components/integrations)
+
+**When to skip:**
+- Simple CRUD operations
+- Single-user flows
+- Already clear from AC list
+
+**Format:**
+- Use Mermaid syntax in markdown (renders in most tools)
+- Place in business spec for process flows
+- Place in technical spec for architecture/sequence diagrams
+- Keep diagrams minimal — if it needs explanation, simplify it
+
 ## Sources and startup
 Read project instructions and the current delivery checkpoint. Defaults:
 - `docs/sources/`: source material.
