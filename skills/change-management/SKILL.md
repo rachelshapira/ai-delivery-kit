@@ -1,110 +1,114 @@
 ---
 name: change-management
-description: Standard workflows for updating project documentation with approval gates.
+description: Standard workflow for project documentation with validation and approval gates.
 ---
 
 # Change Management
 
+## The Flow
+
+```
+DISCOVER → VALIDATE → APPROVE → SPECIFY → VALIDATE → APPROVE → DESIGN → VALIDATE → APPROVE → PLAN → VALIDATE → APPROVE → BUILD → REVIEW → VERIFY → DONE
+```
+
+## Simple Version
+
+```
+┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
+│ DISCOVER │ ──▶ │ SPECIFY  │ ──▶ │  DESIGN  │ ──▶ │   PLAN   │ ──▶ BUILD
+│  scope   │     │   what   │     │   how    │     │   tasks  │
+└────┬─────┘     └────┬─────┘     └────┬─────┘     └────┬─────┘
+     │                │                │                │
+     ▼                ▼                ▼                ▼
+┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
+│ VALIDATE │     │ VALIDATE │     │ VALIDATE │     │ VALIDATE │
+│ + APPROVE│     │ + APPROVE│     │ + APPROVE│     │ + APPROVE│
+│ Business │     │ Business │     │ Tech Lead│     │   Team   │
+└──────────┘     └──────────┘     └──────────┘     └──────────┘
+     │                │                │                │
+     ▼                ▼                ▼                ▼
+ decisions.md    business-spec    technical-spec    delivery.md
+```
+
+## Each Stage
+
+### 1. DISCOVER → decisions.md
+
+**Do:** Read sources, list all processes, ask scope questions  
+**Validate:** All processes listed? Scope decision clear?  
+**Approve:** Business Owner — "Is this the scope we want?"  
+**Output:** Scope recorded in `decisions.md`
+
+---
+
+### 2. SPECIFY → business-spec.he.md
+
+**Do:** Write REQs and ACs for in-scope processes  
+**Validate:** Every process has REQs? Every REQ has ACs? ACs testable?  
+**Approve:** Business Owner — "Are the requirements correct?"  
+**Output:** Status = "מאושר" in `business-spec.he.md`
+
+---
+
+### 3. DESIGN → technical-spec.md
+
+**Do:** Write architecture, APIs, data model, verification mapping  
+**Validate:** Every REQ has API? Every AC has test approach? ADRs incorporated?  
+**Approve:** Tech Lead — "Can we build this?"  
+**Output:** Status = "Approved" in `technical-spec.md`
+
+---
+
+### 4. PLAN → delivery.md
+
+**Do:** Break into tasks, estimate, assign, order by dependency  
+**Validate:** Every REQ covered? Estimates done? Dependencies clear?  
+**Approve:** Team — "Ready to start?"  
+**Output:** Tasks listed in `delivery.md`
+
+---
+
+### 5. BUILD → code
+
+**Do:** Implement tasks  
+**Review:** Code reviewer — "Is this good code?"  
+**Verify:** QA/Business — "Does it meet the ACs?"  
+**Output:** PR merged, AC verified
+
+---
+
 ## The Four Documents
 
-```
-decisions.md          →  WHY we decided (Questions + ADRs)
-business-spec.he.md   →  WHAT to build (Requirements + ACs)
-technical-spec.md     →  HOW to build (APIs, Data, Tech)
-delivery.md           →  WHERE we are (Phase, Tasks, Status)
-```
+| Document | Contains | Updated At | Approved By |
+|----------|----------|------------|-------------|
+| `decisions.md` | Scope, Questions, ADRs | Discover | Business |
+| `business-spec.he.md` | REQs, ACs (Hebrew) | Specify | Business |
+| `technical-spec.md` | APIs, Data, Tech | Design | Tech Lead |
+| `delivery.md` | Phase, Tasks, Status | Plan | Team |
 
-## Approval Flow
+## Validation Checklist (Quick)
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                                                                         │
-│   DISCOVERY          BUSINESS SPEC        TECH SPEC         TASKS       │
-│                                                                         │
-│   ┌─────────┐        ┌─────────┐         ┌─────────┐      ┌─────────┐  │
-│   │ Sources │        │  Draft  │         │  Draft  │      │  Draft  │  │
-│   │ Reading │        │ (WHAT)  │         │  (HOW)  │      │ (WORK)  │  │
-│   └────┬────┘        └────┬────┘         └────┬────┘      └────┬────┘  │
-│        │                  │                   │                 │       │
-│        ▼                  ▼                   ▼                 ▼       │
-│   ┌─────────┐        ┌─────────┐         ┌─────────┐      ┌─────────┐  │
-│   │CHECKPOINT│       │CHECKPOINT│        │CHECKPOINT│     │CHECKPOINT│  │
-│   │ "Scope?" │       │"Correct?"│        │"Feasible?"│    │"Ready?"  │  │
-│   └────┬────┘        └────┬────┘         └────┬────┘      └────┬────┘  │
-│        │                  │                   │                 │       │
-│   ┌────┴────┐        ┌────┴────┐         ┌────┴────┐      ┌────┴────┐  │
-│   │ Business│        │ Business│         │Technical│      │  Team   │  │
-│   │ Approves│        │ Approves│         │ Approves│      │ Approves│  │
-│   └────┬────┘        └────┬────┘         └────┬────┘      └────┬────┘  │
-│        │                  │                   │                 │       │
-│        ▼                  ▼                   ▼                 ▼       │
-│   ┌─────────┐        ┌─────────┐         ┌─────────┐      ┌─────────┐  │
-│   │decisions│        │business-│         │technical│      │delivery │  │
-│   │  .md    │        │spec.he  │         │-spec.md │      │  .md    │  │
-│   │ updated │        │ updated │         │ updated │      │ updated │  │
-│   └─────────┘        └─────────┘         └─────────┘      └─────────┘  │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
-```
+Before each approval, check:
 
-## Stage Gates
+| Stage | Must Have |
+|-------|-----------|
+| Scope | All processes listed, in/out decided |
+| Business Spec | REQs + ACs for all in-scope, testable |
+| Technical Spec | API for each REQ, test for each AC |
+| Tasks | Task for each REQ, estimates, dependencies |
 
-| Stage | Document | Approver | Question | Approved When |
-|-------|----------|----------|----------|---------------|
-| 1. Scope | decisions.md | Business Owner | "Is this what we want?" | Scope decision recorded |
-| 2. Requirements | business-spec.he.md | Business Owner | "Is this correct?" | REQs + ACs approved |
-| 3. Design | technical-spec.md | Tech Lead | "Can we build this?" | Architecture approved |
-| 4. Tasks | delivery.md | Team | "Ready to start?" | Tasks estimated + assigned |
-| 5. Code | (implementation) | Code Reviewer | "Is this good?" | PR approved |
-| 6. Done | delivery.md | QA / Business | "Does it work?" | ACs verified |
+## Change Rules
 
-## Status Values
-
-Each document tracks its status:
-
-```markdown
-## פרטי המסמך (in business-spec.he.md)
-- **מצב:** טיוטה / בסקירה / מאושר
-- **מאשר:** [שם]
-- **תאריך אישור:** [תאריך]
-```
-
-```markdown
-## Baseline (in technical-spec.md)
-- **Status:** Draft / In Review / Approved
-- **Approved by:** [name]
-- **Approval date:** [date]
-```
-
-## Change Rules with Approval
-
-| Change Type | Update | Who Approves |
-|-------------|--------|--------------|
-| Business (what) | business-spec → technical-spec | Business Owner → Tech Lead |
-| Technical (how) | technical-spec only | Tech Lead |
-| Big tech decision | decisions → technical-spec | Tech Lead (ADR) |
-| Scope change | decisions → all docs | Business Owner |
-
-## The Simple Flow
-
-```
-1. DISCOVER    →  "Here's what I found. Which scope?"     →  Business approves scope
-                                                              ↓
-2. SPECIFY     →  "Here are the requirements. Correct?"   →  Business approves REQs
-                                                              ↓
-3. DESIGN      →  "Here's how to build it. Feasible?"     →  Tech Lead approves design
-                                                              ↓
-4. PLAN        →  "Here are the tasks. Ready?"            →  Team approves tasks
-                                                              ↓
-5. BUILD       →  (implement)                             →  Code review approves PR
-                                                              ↓
-6. VERIFY      →  "Does it meet the ACs?"                 →  QA/Business approves done
-```
+| Change Type | Update | Validate | Approve |
+|-------------|--------|----------|---------|
+| Business (what) | business-spec → technical-spec | Both | Business → Tech |
+| Technical (how) | technical-spec | Technical only | Tech Lead |
+| Scope change | decisions → all | All | Business |
 
 ## Never Skip
 
-❌ Don't write requirements without scope approval  
-❌ Don't write technical design without requirements approval  
-❌ Don't start coding without design approval  
-❌ Don't merge without code review  
-❌ Don't mark done without verification  
+❌ No approval without validation  
+❌ No next stage without approval  
+❌ No code without approved design  
+❌ No merge without review  
+❌ No done without verification
