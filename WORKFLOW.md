@@ -19,7 +19,7 @@ validate  validate  validate  validate   review   verify
 | 2 | SPEC | Write REQs + ACs | REQ per feature? AC testable? | Business | business-spec.he.md |
 | 3 | DESIGN | Write APIs, data model | API per REQ? Test per AC? | Tech Lead | technical-spec.md |
 | 4 | TASKS | Break into work items | Task per REQ? Estimated? | Team | delivery.md |
-| 5 | BUILD | Write code | Code review pass? | Reviewer | PR merged |
+| 5 | BUILD | Write code (use ponytail) | Code review pass? | Reviewer | PR merged |
 | 6 | DONE | Test | All ACs pass? | QA | Verified |
 
 ## Files
