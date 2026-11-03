@@ -2,13 +2,37 @@
 """
 Markdown to Professional BFS Word Document Converter
 
-Creates Word documents matching the organizational BFS format:
+Creates Word documents matching organizational BFS format:
 - Title page with system name, document type, version
 - Document info table (שדה | ערך)
-- Real Table of Contents
-- Numbered sections
+- Real Table of Contents with clickable links
+- Numbered sections with RTL Hebrew support
 - Professional tables with headers
 - Mermaid diagrams as images
+
+Usage:
+    python md_to_bfs_word.py input.md [output.docx]
+
+YAML Frontmatter Fields (all optional):
+    ---
+    מערכת: System Name              # or: system:
+    גרסה: 1.0                       # or: version:
+    מצב: טיוטה                      # or: status:
+    ארגון: Organization Name        # or: organization: (for header)
+    מחלקה: Department Name          # or: department: (for header)
+    קהל יעד: Target Audience        # or: audience:
+    בעלים: Document Owner           # or: owner:
+    תיאור: Brief Description        # or: description:
+    footer: Custom footer text      # optional custom footer
+    ---
+
+Logo:
+    Place logo.png in one of these locations:
+    - {script_dir}/../assets/logo.png
+    - {markdown_dir}/assets/logo.png
+
+Requirements:
+    pip install python-docx mermaid-py
 """
 
 import re
@@ -132,8 +156,17 @@ def setup_document(doc):
             pass
 
 
-def add_header_footer(doc, system_name, logo_path=None):
-    """Add header and footer to all sections - matching BTL reference format."""
+def add_header_footer(doc, meta, logo_path=None):
+    """Add header and footer to all sections.
+    
+    Header/footer content is extracted from document metadata (YAML frontmatter).
+    If not provided, uses generic defaults.
+    """
+    system_name = meta.get('system_name', 'System')
+    organization = meta.get('organization', '')
+    department = meta.get('department', '')
+    footer_text = meta.get('footer', f"{system_name} – מסמך אפיון פונקציונלי עסקי")
+    
     for section in doc.sections:
         # Header
         header = section.header
@@ -150,22 +183,24 @@ def add_header_footer(doc, system_name, logo_path=None):
             run = p1.add_run()
             run.add_picture(str(logo_path), width=Cm(1.5))
         
-        # Line 2 - Organization name
-        p2 = header.add_paragraph()
-        p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = p2.add_run("הביטוח הלאומי")
-        run.font.size = Pt(11)
-        run.font.bold = True
-        run.font.name = 'Arial'
-        make_rtl(p2)
+        # Line 2 - Organization name (if provided)
+        if organization:
+            p2 = header.add_paragraph()
+            p2.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            run = p2.add_run(organization)
+            run.font.size = Pt(11)
+            run.font.bold = True
+            run.font.name = 'Arial'
+            make_rtl(p2)
         
-        # Line 3 - Department
-        p3 = header.add_paragraph()
-        p3.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = p3.add_run("מנהל תקשוב ומערכות מידע")
-        run.font.size = Pt(10)
-        run.font.name = 'Arial'
-        make_rtl(p3)
+        # Line 3 - Department (if provided)
+        if department:
+            p3 = header.add_paragraph()
+            p3.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            run = p3.add_run(department)
+            run.font.size = Pt(10)
+            run.font.name = 'Arial'
+            make_rtl(p3)
         
         # Footer
         footer = section.footer
@@ -177,7 +212,7 @@ def add_header_footer(doc, system_name, logo_path=None):
         
         p = footer.paragraphs[0] if footer.paragraphs else footer.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        run = p.add_run(f"{system_name} – אפיון פונקציונלי עסקי | מסמך לאישור יחידה עסקית")
+        run = p.add_run(footer_text)
         run.font.size = Pt(9)
         run.font.name = 'Arial'
         run.font.color.rgb = RGBColor(128, 128, 128)
@@ -634,33 +669,86 @@ def process_content(doc, content, temp_dir, diagram_counter):
 
 
 def extract_metadata(md_content):
-    """Extract document metadata from markdown."""
+    """Extract document metadata from markdown YAML frontmatter.
+    
+    Supported YAML fields:
+    - מערכת / system: System name
+    - גרסה / version: Version number
+    - מצב / status: Document status
+    - ארגון / organization: Organization name (for header)
+    - מחלקה / department: Department name (for header)
+    - קהל יעד / audience: Target audience
+    - בעלים / owner: Document owner
+    - תיאור / description: Brief description
+    - footer: Custom footer text
+    """
     info = {
-        'system_name': 'NursingPortal',
+        'system_name': 'System',
         'version': '1.0',
         'status': 'טיוטה',
-        'description': ''
+        'description': '',
+        'organization': '',
+        'department': '',
+        'audience': 'גורמי אישור עסקיים',
+        'owner': '',
+        'footer': ''
     }
     
     # Check for YAML frontmatter
     yaml_match = re.search(r'^---\s*\n(.+?)\n---', md_content, re.DOTALL)
     if yaml_match:
         yaml_content = yaml_match.group(1)
-        # Extract from YAML
-        ver_match = re.search(r'גרסה:\s*(\S+)', yaml_content)
-        if ver_match:
-            info['version'] = ver_match.group(1)
-        status_match = re.search(r'מצב:\s*(.+?)(?:\n|$)', yaml_content)
-        if status_match:
-            info['status'] = status_match.group(1).strip()
-        sys_match = re.search(r'מערכת:\s*(.+?)(?:\n|$)', yaml_content)
+        
+        # System name (Hebrew or English key)
+        sys_match = re.search(r'(?:מערכת|system):\s*(.+?)(?:\n|$)', yaml_content, re.IGNORECASE)
         if sys_match:
             info['system_name'] = sys_match.group(1).strip()
+        
+        # Version
+        ver_match = re.search(r'(?:גרסה|version):\s*(\S+)', yaml_content, re.IGNORECASE)
+        if ver_match:
+            info['version'] = ver_match.group(1)
+        
+        # Status
+        status_match = re.search(r'(?:מצב|status):\s*(.+?)(?:\n|$)', yaml_content, re.IGNORECASE)
+        if status_match:
+            info['status'] = status_match.group(1).strip()
+        
+        # Organization (for header)
+        org_match = re.search(r'(?:ארגון|organization):\s*(.+?)(?:\n|$)', yaml_content, re.IGNORECASE)
+        if org_match:
+            info['organization'] = org_match.group(1).strip()
+        
+        # Department (for header)
+        dept_match = re.search(r'(?:מחלקה|department):\s*(.+?)(?:\n|$)', yaml_content, re.IGNORECASE)
+        if dept_match:
+            info['department'] = dept_match.group(1).strip()
+        
+        # Audience
+        audience_match = re.search(r'(?:קהל יעד|audience):\s*(.+?)(?:\n|$)', yaml_content, re.IGNORECASE)
+        if audience_match:
+            info['audience'] = audience_match.group(1).strip()
+        
+        # Owner
+        owner_match = re.search(r'(?:בעלים|owner):\s*(.+?)(?:\n|$)', yaml_content, re.IGNORECASE)
+        if owner_match:
+            info['owner'] = owner_match.group(1).strip()
+        
+        # Description
+        desc_match = re.search(r'(?:תיאור|description):\s*(.+?)(?:\n|$)', yaml_content, re.IGNORECASE)
+        if desc_match:
+            info['description'] = desc_match.group(1).strip()
+        
+        # Custom footer
+        footer_match = re.search(r'footer:\s*(.+?)(?:\n|$)', yaml_content, re.IGNORECASE)
+        if footer_match:
+            info['footer'] = footer_match.group(1).strip()
     
     # Fallback: Title from first heading
-    match = re.search(r'^#\s+.*?—\s*(.+?)$', md_content, re.MULTILINE)
-    if match and not info.get('system_name'):
-        info['system_name'] = match.group(1).strip()
+    if info['system_name'] == 'System':
+        match = re.search(r'^#\s+.*?—\s*(.+?)$', md_content, re.MULTILINE)
+        if match:
+            info['system_name'] = match.group(1).strip()
     
     # Fallback: Version from bold text
     if info['version'] == '1.0':
@@ -670,13 +758,18 @@ def extract_metadata(md_content):
     
     # Fallback: Status from bold text
     match = re.search(r'\*\*מצב:\*\*\s*(.+?)(?:\n|$)', md_content)
-    if match:
+    if match and info['status'] == 'טיוטה':
         info['status'] = match.group(1).strip()
     
-    # Description/scope
-    match = re.search(r'\*\*התכולה[^:]*:\*\*\s*(.+?)(?:\n|$)', md_content)
-    if match:
-        info['description'] = match.group(1).strip()
+    # Fallback: Description from scope
+    if not info['description']:
+        match = re.search(r'\*\*התכולה[^:]*:\*\*\s*(.+?)(?:\n|$)', md_content)
+        if match:
+            info['description'] = match.group(1).strip()
+    
+    # Default footer if not provided
+    if not info['footer']:
+        info['footer'] = f"{info['system_name']} – מסמך אפיון פונקציונלי עסקי"
     
     return info
 
@@ -724,21 +817,37 @@ def convert(md_path, output_path):
     setup_document(doc)
     
     # Add header and footer with logo
-    script_dir = Path(__file__).parent.parent  # .kiro folder
-    logo_path = script_dir / 'assets' / 'bituach_leumi_logo.png'
-    add_header_footer(doc, meta['system_name'], logo_path)
+    # Look for logo in common locations
+    logo_path = None
+    script_dir = Path(__file__).parent.parent  # parent of scripts folder
+    possible_paths = [
+        script_dir / 'assets' / 'logo.png',
+        script_dir / 'assets' / 'bituach_leumi_logo.png',
+        Path(md_path).parent / 'assets' / 'logo.png',
+        Path(md_path).parent.parent / 'assets' / 'logo.png',
+    ]
+    for p in possible_paths:
+        if p.exists():
+            logo_path = p
+            break
+    
+    add_header_footer(doc, meta, logo_path)
     
     # Title page
     add_title_page(doc, meta['system_name'], meta['version'], meta['description'])
     
-    # Document info table
+    # Document info table - built from metadata
     info_table = {
         "סטטוס המסמך": meta['status'],
         "גרסה": meta['version'],
         "מועד עדכון": datetime.now().strftime("%d.%m.%Y"),
-        "קהל יעד": "אגף סיעוד, עובדי מטה, נותני שירותים, גורמי אישור עסקיים",
+        "קהל יעד": meta['audience'],
         "אופי המסמך": "עסקי-פונקציונלי; אינו מחליף אפיון טכני או מסמך ארכיטקטורה"
     }
+    # Add owner if provided
+    if meta.get('owner'):
+        info_table["בעלים"] = meta['owner']
+    
     add_document_info_table(doc, info_table)
     
     # Parse sections first to build TOC
