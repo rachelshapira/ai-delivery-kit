@@ -194,3 +194,135 @@ Before handoff, verify:
 - Approval impact shows material changes without flagging it
 
 Do not claim approval without an actual source or write application code. Keep the document proportional; detail only current scope while maintaining the overall map.
+
+---
+
+## Business Specification Outputs
+
+### Principle: Single Source of Truth
+
+Maintain one canonical business specification. Generate all stakeholder-facing documents from it. Never independently maintain two versions of business requirements.
+
+### Output Files
+
+| File | Purpose | IDs | Maintenance |
+|---|---|---|---|
+| `docs/business-spec.he.md` | Canonical specification | Visible: PROC, REQ, AC, BR, ADR | Edited by spec-agent |
+| `docs/business-spec-final.he.md` | Business approval version | Hidden as HTML comments | Generated from canonical |
+| `docs/business-spec-final.he.docx` | Formal approval document | Hidden | Generated from final markdown |
+
+### 1. Canonical Business Specification
+
+**File:** `docs/business-spec.he.md`
+
+- Contains stable PROC, REQ, AC, BR, and relevant decision IDs.
+- Includes complete business processes, requirements, business rules, validations, and acceptance criteria.
+- Serves as the authoritative source for technical specifications, development, testing, and traceability.
+- All requested business changes must be applied here first.
+
+### 2. Business Approval Specification
+
+**File:** `docs/business-spec-final.he.md`
+
+Generated from the canonical specification using these transformation rules:
+
+**What to transform:**
+- Hide internal IDs from headings and visible text (REQ-001 → hidden)
+- Convert developer-oriented labels into clear business terminology
+- Improve presentation and wording for business readers
+
+**What to preserve exactly:**
+- Every business requirement and acceptance criterion
+- All business processes, rules, exceptions, and validations
+- Diagrams and visual elements
+- Requirement ordering and section relationships
+- Open questions and pending decisions
+
+**How to maintain traceability:**
+- Insert HTML comments with the original IDs: `<!-- REQ-001 -->`
+- Place the comment immediately before the transformed content
+- This allows tracing approved content back to canonical IDs
+
+**Example transformation:**
+```markdown
+<!-- PROC-01 -->
+## התחברות למערכת
+
+<!-- REQ-001 -->
+המערכת תאפשר לנותן שירות להתחבר באמצעות שם משתמש וסיסמה.
+
+<!-- AC-001-01 -->
+**קריטריון קבלה:** הזנת פרטים תקינים תוביל לכניסה למערכת תוך 3 שניות.
+```
+
+**Critical rule:** The agent may improve wording but must not change business meaning. This is transformation, not rewriting.
+
+### 3. Word Approval Document
+
+**File:** `docs/business-spec-final.he.docx`
+
+Generate using:
+```
+python .kiro/scripts/md_to_bfs_word.py docs/business-spec-final.he.md docs/business-spec-final.he.docx
+```
+
+The script produces a Hebrew RTL document with:
+- Logo header matching organizational template
+- Clickable table of contents
+- Mermaid diagrams rendered as images
+- Professional formatting for business stakeholders
+
+**Note:** HTML comments (traceability IDs) do not appear in the Word output.
+
+### Consistency Validation Gate
+
+Before generating the Word document, validate:
+
+1. **Requirement coverage:** Every REQ in canonical appears in business version
+2. **AC preservation:** Every acceptance criterion is present and unchanged in meaning
+3. **Business rules:** All BR-XXX rules preserved
+4. **Exception handling:** Error scenarios not removed or simplified
+5. **Open questions:** Pending decisions remain visible
+6. **Section integrity:** No sections dropped or reordered
+7. **Approval status:** Document marked Draft until explicitly approved
+
+**Validation output:**
+- PASS: All checks passed, ready for Word generation
+- FAIL: List discrepancies, do not generate Word document
+
+### Change Management Flow
+
+When business stakeholders request modifications:
+
+```
+1. Update canonical specification (business-spec.he.md)
+       ↓
+2. Regenerate business version (business-spec-final.he.md)
+       ↓
+3. Run consistency validation
+       ↓
+4. Regenerate Word document
+       ↓
+5. Request approval for updated version
+```
+
+**Critical rule:** Never modify the approval documents directly. All changes flow from the canonical specification.
+
+### Responsibility Boundaries
+
+**Spec-agent responsibilities:**
+- Create and update `business-spec.he.md`
+- Generate `business-spec-final.he.md` with transformation rules
+- Validate consistency between versions
+- Generate Word document
+- Deliver for business approval
+
+**Spec-agent does NOT:**
+- Approve its own specification (validates consistency, not business content)
+- Make business decisions (flags questions for stakeholders)
+
+**Orchestrator responsibilities:**
+- Invoke spec-agent for specification work
+- Receive validation results
+- Present document for business stakeholder approval
+- Proceed to technical specification only after explicit approval
